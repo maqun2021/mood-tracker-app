@@ -7,6 +7,7 @@ import os
 import base64
 from PIL import Image
 import io
+import pytz
 
 # 页面配置
 st.set_page_config(
@@ -221,7 +222,8 @@ def create_mood_chart():
 def display_mood_entry(entry, show_comments=True):
     """显示单个情绪记录"""
     mood_info = moods[entry['mood']]
-    timestamp = datetime.fromisoformat(entry['timestamp']).strftime("%m月%d日 %H:%M")
+    beijing = pytz.timezone('Asia/Shanghai')
+    timestamp = datetime.fromisoformat(entry['timestamp']).astimezone(beijing).strftime("%m月%d日 %H:%M")
     
     # 创建卡片
     with st.container():
@@ -297,8 +299,9 @@ def main():
         st.markdown('<div class="header-text">here with you</div>', unsafe_allow_html=True)
     
     with col3:
-        # 实时更新时间
-        current_time = datetime.now().strftime("%Y年%m月%d日 %H:%M")
+        # 使用北京时间
+        beijing = pytz.timezone('Asia/Shanghai')
+        current_time = datetime.now(beijing).strftime("%Y年%m月%d日 %H:%M")
         st.markdown(f'<div class="time-display">{current_time}</div>', unsafe_allow_html=True)
     
     # 主要内容区域
@@ -407,4 +410,3 @@ def main():
 
 if __name__ == "__main__":
     main() 
-
